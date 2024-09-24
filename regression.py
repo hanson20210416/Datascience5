@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
 class LinearRegression:
-    def __init__(self, alpha=0.01, lambda_=0.1, num_iter=1000):
+    def __init__(self, alpha=0.01, lambda_=0.7, num_iter=1000):
         self.alpha = alpha
         self.lambda_ = lambda_
         self.num_iter = num_iter
@@ -13,7 +13,7 @@ class LinearRegression:
 
     def fit(self, X, y):
         # Add bias term and scale features
-        X = self.data_preparation(X)
+        X = self.data_scaler(X)
         m, n = X.shape
         self.theta = np.zeros(n)
         self.cost_history = []
@@ -26,10 +26,10 @@ class LinearRegression:
             self.theta -= self.alpha * self.gradient_descent_lin(X, y, y_pred)
         return self
 
-    def data_preparation(self, X):
+    def data_scaler(self, X):
         """Prepare data by scaling features and adding an intercept term."""
         X_scaled = self.scaler.fit_transform(X)
-        X_scaled = np.column_stack((np.ones(X_scaled.shape[0]), X_scaled))  # Add bias term
+        X_scaled = np.column_stack((np.ones(X_scaled.shape[0]), X_scaled))  
         return X_scaled
 
     def _predict(self, X):
@@ -52,7 +52,7 @@ class LinearRegression:
         m = len(y)
         error = y_pred - y
         gradient = (1 / m) * (X.T @ error)
-        gradient[1:] += (self.lambda_ / m) * self.theta[1:]  # Regularize
+        gradient[1:] += (self.lambda_ / m) * self.theta[1:]  
         return gradient
 
     def draw_costs(self):
@@ -65,7 +65,7 @@ class LinearRegression:
 
 
 class LogisticRegression:
-    def __init__(self, alpha=0.01, lambda_=0.1, num_iter=1000):
+    def __init__(self, alpha=0.01, lambda_=0.8, num_iter=1000):
         self.alpha = alpha
         self.lambda_ = lambda_
         self.num_iter = num_iter
@@ -75,7 +75,7 @@ class LogisticRegression:
 
     def fit(self, X, y):
         # Add bias term and scale features
-        X = self.data_preparation(X)
+        X = self.data_scaler(X)
         m, n = X.shape
         self.theta = np.zeros(n)
         self.cost_history = []
@@ -88,10 +88,10 @@ class LogisticRegression:
             self.theta -= self.alpha * self.gradient_descent_log(X, y, self.theta)
         return self
 
-    def data_preparation(self, X):
+    def data_scaler(self, X):
         """Prepare data by scaling features and adding an intercept term."""
         X_scaled = self.scaler.fit_transform(X)
-        X_scaled = np.column_stack((np.ones(X_scaled.shape[0]), X_scaled))  # Add bias term
+        X_scaled = np.column_stack((np.ones(X_scaled.shape[0]), X_scaled))
         return X_scaled
 
     def _predict(self, X):
@@ -113,7 +113,7 @@ class LogisticRegression:
         m = len(y)
         h = self.sigmoid(X @ theta)
         gradient = (1 / m) * X.T @ (h - y)
-        gradient[1:] += (self.lambda_ / m) * theta[1:]  # Regularize
+        gradient[1:] += (self.lambda_ / m) * theta[1:] 
         return gradient
 
     def predict(self, X, threshold=0.5):
